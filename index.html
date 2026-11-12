@@ -5954,5 +5954,70 @@
             }
         }
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    // 1. Charger la configuration générale et la bannière urgente
+    const configRes = await fetch('./data/config.json?v=' + Date.now());
+    if (configRes.ok) {
+      const config = await configRes.json();
+      
+      // Exemple de mise à jour des éléments HTML (adaptez les IDs à votre HTML)
+      if (config.organisation && document.getElementById('org-name')) {
+        document.getElementById('org-name').textContent = config.organisation;
+      }
+      if (config.titre_championnat && document.getElementById('tournoi-title')) {
+        document.getElementById('tournoi-title').textContent = config.titre_championnat;
+      }
+      if (config.saison && document.getElementById('saison-label')) {
+        document.getElementById('saison-label').textContent = config.saison;
+      }
+
+      // Mise à jour de la bannière urgente
+      if (config.banniere_urgente) {
+        const b = config.banniere_urgente;
+        if (document.getElementById('alert-badge')) document.getElementById('alert-badge').textContent = b.badge || '';
+        if (document.getElementById('alert-title')) document.getElementById('alert-title').textContent = b.titre || '';
+        if (document.getElementById('alert-text')) document.getElementById('alert-text').textContent = b.texte || '';
+        if (b.image && document.getElementById('alert-img')) {
+          document.getElementById('alert-img').src = '.' + b.image;
+        }
+      }
+    }
+
+    // 2. Charger le bandeau défilant (Ticker)
+    const tickerRes = await fetch('./data/ticker.json?v=' + Date.now());
+    if (tickerRes.ok) {
+      const tickerData = await tickerRes.json();
+      const tickerContainer = document.getElementById('ticker-content');
+      if (tickerContainer && Array.isArray(tickerData.messages)) {
+        tickerContainer.innerHTML = tickerData.messages
+          .map(msg => `<span class="mx-4">⚽ ${msg}</span>`)
+          .join(' • ');
+      }
+    }
+
+    // 3. Charger l'album photos
+    const albumRes = await fetch('./data/album.json?v=' + Date.now());
+    if (albumRes.ok) {
+      const albumData = await albumRes.json();
+      const galleryContainer = document.getElementById('album-grid');
+      if (galleryContainer && Array.isArray(albumData.photos)) {
+        galleryContainer.innerHTML = albumData.photos.map(photo => `
+          <div class="photo-card">
+            <img src=".${photo.image}" alt="${photo.titre || ''}" loading="lazy">
+            <p>${photo.titre || ''}</p>
+          </div>
+        `).join('');
+      }
+    }
+
+  } catch (error) {
+    console.error('Erreur lors du chargement des données Pages CMS :', error);
+  }
+});
+</script>
+
 </body>
 </html>
