@@ -1,0 +1,198 @@
+# Configuration Pages CMS - البطولة الجهوية لكرة القدم بتوزر
+media:
+  input: assets/images
+  output: /assets/images
+
+content:
+  - name: tournament_data
+    label: إدارة البطولة والنتائج (Championnat)
+    type: file
+    path: data/tournament.json
+    fields:
+      # 1. Paramètres généraux (tournamentSettings)
+      - name: settings
+        label: إعدادات البطولة والشعارات والملاعب
+        type: object
+        fields:
+          - name: organizer
+            label: الجهة المنظمة
+            type: string
+            default: "المكتب الجهوي للثقافة والرياضة والعمل بتوزر"
+          - name: title
+            label: اسم الدورة / البطولة
+            type: string
+            default: "رزنامة بطولة كرة القدم 6 لاعبين"
+          - name: season
+            label: الموسم الرياضي
+            type: string
+            default: "موسم 2025-2026"
+          - name: logo1
+            label: الشعار الأيمن (المكتب الجهوي)
+            type: image
+          - name: logo2
+            label: الشعار الأيسر (المنظمة الوطنية)
+            type: image
+          - name: venues
+            label: قائمة الملاعب المعتمدة
+            type: string
+            list: true
+
+      # 2. Équipes et listes des joueurs (teams)
+      - name: teams
+        label: الفرق المشاركة وقوائم اللاعبين
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: المعرّف (ID)
+            type: number
+            required: true
+          - name: nameAr
+            label: اسم الفريق
+            type: string
+            required: true
+          - name: short
+            label: الرمز المختصر
+            type: string
+          - name: color
+            label: اللون الأساسي (Hex)
+            type: string
+            default: "#0284c7"
+          - name: customLogo
+            label: شعار الفريق
+            type: image
+          - name: drawNumber
+            label: رقم القرعة
+            type: number
+          - name: players
+            label: قائمة اللاعبين (Effectif)
+            type: object
+            list: true
+            fields:
+              - name: licence
+                label: رقم الإجازة (N° de licence)
+                type: string
+              - name: name
+                label: الاسم واللقب (Nom & Prénom)
+                type: string
+                required: true
+              - name: cin
+                label: ب.ت.و (N° CIN)
+                type: string
+              - name: css
+                label: رقم الضمان (N° CSS)
+                type: string
+              - name: dob
+                label: تاريخ الولادة (jj/mm/aaaa)
+                type: string
+
+      # 3. Calendrier et Résultats des matchs (matches)
+      - name: matches
+        label: الرزنامة والنتائج (الذهاب والإياب)
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: معرّف المباراة
+            type: string
+          - name: phase
+            label: المرحلة
+            type: select
+            options:
+              values:
+                - value: aller
+                  label: مرحلة الذهاب (Aller)
+                - value: retour
+                  label: مرحلة الإياب (Retour)
+          - name: round
+            label: رقم الجولة
+            type: number
+          - name: homeTeamId
+            label: معرّف الفريق المضيف (Home ID)
+            type: number
+          - name: awayTeamId
+            label: معرّف الفريق الضيف (Away ID)
+            type: number
+          - name: homeScore
+            label: أهداف المضيف (رقم أو FORFAIT)
+            type: string
+          - name: awayScore
+            label: أهداف الضيف (رقم أو FORFAIT)
+            type: string
+          - name: date
+            label: التاريخ (YYYY-MM-DD)
+            type: date
+          - name: time
+            label: التوقيت (HH:MM)
+            type: string
+          - name: venue
+            label: الملعب
+            type: string
+
+      # 4. Communiqué urgent en page d'accueil (featured)
+      - name: featured
+        label: البلاغ الرسمي العاجل (الواجهة الرئيسية)
+        type: object
+        fields:
+          - name: badgeAr
+            label: شارة البلاغ
+            type: string
+          - name: titleAr
+            label: عنوان البلاغ العاجل
+            type: string
+          - name: descAr
+            label: نص البلاغ
+            type: text
+          - name: sideImg
+            label: صورة البلاغ
+            type: image
+          - name: sideLabel
+            label: شارة الصورة المصغرة
+            type: string
+
+      # 5. Fil d'actualités défilant (ticker)
+      - name: ticker
+        label: شريط الأخبار العاجلة المتحرك (News Ticker)
+        type: string
+        list: true
+
+      # 6. Articles d'actualités (news)
+      - name: news
+        label: الأخبار والمقالات
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: المعرّف
+            type: number
+          - name: date
+            label: تاريخ النشر
+            type: date
+          - name: badgeAr
+            label: التصنيف
+            type: string
+          - name: titleAr
+            label: عنوان المقال
+            type: string
+          - name: descAr
+            label: نص المقال
+            type: text
+          - name: img
+            label: صورة المقال
+            type: image
+
+      # 7. Galerie photos (gallery)
+      - name: gallery
+        label: ألبوم صور المنشآت والأنشطة
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: المعرّف
+            type: number
+          - name: titleAr
+            label: وصف الصورة
+            type: string
+          - name: url
+            label: الصورة
+            type: image

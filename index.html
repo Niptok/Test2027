@@ -3656,7 +3656,28 @@
             });
         }
 
-        window.onload = function() {
+        window.onload = async function() {
+            try {
+                // Chargement prioritaire des données publiées par Pages CMS
+                const response = await fetch('data/tournament.json?t=' + Date.now());
+                if (response.ok) {
+                    const cmsData = await response.json();
+                    if (cmsData && Object.keys(cmsData).length > 0) {
+                        window.__EMBEDDED_INITIAL_STATE__ = cmsData;
+                        // Nettoyer le cache local pour refléter les modifications du CMS
+                        localStorage.removeItem('tozeur_foot_teams_v2');
+                        localStorage.removeItem('tozeur_foot_matches_v2');
+                        localStorage.removeItem('tozeur_foot_settings_v2');
+                        localStorage.removeItem('tozeur_foot_news');
+                        localStorage.removeItem('tozeur_foot_gallery');
+                        localStorage.removeItem('tozeur_foot_ticker');
+                        localStorage.removeItem('tozeur_foot_featured');
+                    }
+                }
+            } catch (e) {
+                console.warn("Mode hors-ligne ou fichier JSON non trouvé, repli sur localStorage.", e);
+            }
+
             loadFromLocalStorage();
             // Restaurer la session admin si active dans sessionStorage
             if (sessionStorage.getItem('tozeur_foot_admin') === 'true') {
